@@ -1,0 +1,28 @@
+QPushButton {
+    background-color: rgba(220,220,220,1);
+    border-style: outset;
+    border-width: 2px;
+    border-radius: 10px;
+    border-color: beige;
+    min-width: 10em;
+    padding: 6px;
+}
+
+QPushButton:hover {
+    background: linear-gradient(#d2dfea, #71828c);
+}
+
+QPushButton:pressed {
+    line-height: 2.6em;
+    background-color: linear-gradient(#bac6cf, #c5d3de);
+    border-style: 0 -1px rgba(220,220,220,0.4) inset;
+}
+
+QPushButton:before {
+/*    content: "";*/
+    position: absolute;
+    top: -10px; right: -10px; bottom: -10px; left: -10px;
+    z-index: -1;
+    border-radius: 8px;
+    background-color: linear-gradient(rgba(200,200,200,0.5), rgba(240,240,240,0.5));
+}

@@ -1,0 +1,6 @@
+https://bio-ege.sdamgia.ru/test?theme=208&print=true
+https://bio-ege.sdamgia.ru/test?a=view_many&cat_id[]=255&cat_id[]=349&cat_id[]=350&cat_id[]=278&cat_id[]=281&filter=all&print=true
+https://bio-ege.sdamgia.ru/test?a=view_many&cat_id[]=360&cat_id[]=359&filter=all&print=true
+https://bio-ege.sdamgia.ru/test?a=view_many&cat_id[]=369&cat_id[]=358&filter=all&print=true
+https://bio-ege.sdamgia.ru/test?a=view_many&cat_id[]=370&cat_id[]=256&filter=all&print=true
+https://bio-ege.sdamgia.ru/test?a=view_many&cat_id[]=371&cat_id[]=367&filter=all&print=true

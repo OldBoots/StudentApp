@@ -1,0 +1,19 @@
+QPushButton {
+/*    text-align: bottom;*/
+/*    image: url(:/plus.png);*/
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #d4d4d4;
+}
+
+QPushButton:hover {
+/*    text-align: bottom;*/
+    border-width: 2;
+    border-color: #bababa;
+    border-style: solid;
+}
+
+QPushButton:pressed {
+/*    text-align: bottom;*/
+    background-color: #bababa;
+}
