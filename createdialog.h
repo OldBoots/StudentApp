@@ -8,7 +8,7 @@
 #include <QTextStream>
 #include <QWebEngineView>
 #include <QHBoxLayout>
-#include <QElapsedTimer>
+#include <QTimer>
 #include "trainingform.h"
 
 namespace Ui {
@@ -29,6 +29,7 @@ private slots:
     void slot_parse_tasks();
     void slot_task_processing();
     void slot_show_web_page();
+    void slot_waiting_overrun();
 signals:
     void sign_task_processing_completed();
     void sign_task_parsing_completed();
@@ -46,7 +47,8 @@ private:
     QString body_html;
     QList<QHBoxLayout*> layout_list;
     int cur_num;
-    QElapsedTimer waiting_timer;
+    QTimer timer_waiting;
+    bool flag_overrun;
 };
 
 #endif // CREATEDIALOG_H
