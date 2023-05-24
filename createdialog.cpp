@@ -33,7 +33,7 @@ CreateDialog::CreateDialog(QWidget *parent) :
 
     load_url();
 
-    ui->verticalLayout->addWidget(&web_page);
+//    ui->verticalLayout->addWidget(&web_page);
 
     connect(ui->butt_cancel, SIGNAL(clicked()), SLOT(reject()));
     connect(ui->butt_create, SIGNAL(clicked()), SLOT(slot_create_form()));
@@ -75,6 +75,7 @@ void CreateDialog::slot_create_form()
 {
     cur_num = 0;
     num_quest = 0;
+    body_html.clear();
     flag_overrun = false;
     ui->label_status->clear();
     emit sign_task_processing_completed();
@@ -83,7 +84,7 @@ void CreateDialog::slot_create_form()
 void CreateDialog::slot_waiting_overrun()
 {
     flag_overrun = true;
-//    qDebug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    qDebug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     ui->label_status->setText("Не удалось загрузить задания.\nПопробуйте использовать локальную базу данных.");
     timer_waiting.stop();
 }
@@ -96,11 +97,10 @@ void CreateDialog::slot_task_processing()
     value = spin_box->value();
     if(value != 0){
         count_quest = value;
-        current_type = spin_box->objectName().right(1).toInt();
         if(ui->check_box_lockal_base->isChecked()){
-            web_page.load(QUrl::fromLocalFile("C:/Qt/Project/StudentApp/test" + QString::number(current_type) + ".html"));
+            web_page.load(QUrl::fromLocalFile("C:/Qt/Project/StudentApp/test" + QString::number(cur_num) + ".html"));
         } else{
-//            web_page.load(QUrl(list_url[current_type]));
+            //            web_page.load(QUrl(list_url[cur_num]));
         }
         timer_waiting.start(5000);
     }else{
@@ -117,15 +117,19 @@ void CreateDialog::slot_parse_tasks()
 {
     timer_waiting.stop();
     QString buf;
-    web_page.page()->runJavaScript(set_JS_data(":/ReadTask" + QString::number(current_type)), [&]
+    web_page.page()->runJavaScript(set_JS_data("C:/Qt/Project/StudentApp/ReadTask" + QString::number(cur_num) + ".js"), [&]
                                    (QVariant result) {
                                        buf = result.toString();
+                                       if(buf.size() < 10){
+                                           buf.clear();
+                                       }
                                    });
     timer_waiting.start(5000);
     while(buf.isEmpty() && !flag_overrun){
         QApplication::processEvents();
     }
     timer_waiting.stop();
+    num_quest += count_quest;
     if(flag_overrun){
         return;
     }
@@ -145,7 +149,7 @@ void CreateDialog::slot_show_web_page()
     file.open(QIODevice::WriteOnly);
     stream << "<html>" << "<body>" << "<link rel=\"stylesheet\" href=\"qrc:/MyStyle.css\">" << body_html << "</body>" << "</html>";
     file.close();
-    web_page.load(QUrl::fromLocalFile(file.fileName()));
+    emit accept();
 }
 
 
@@ -187,6 +191,5 @@ QString CreateDialog::set_JS_data(QString file_path)
     str_file = str_file.left(index) + QString::number(count_quest) + str_file.right(str_file.size() - (index + 7));
     index = str_file.indexOf("~quest~");
     str_file = str_file.left(index) + QString::number(num_quest) + str_file.right(str_file.size() - (index + 7));
-    num_quest += count_quest;
     return str_file;
 }

@@ -1,0 +1,4 @@
+function func(){
+    let temp = document.getElementsByClassName("prob_nums").length;
+    return temp;
+} func();

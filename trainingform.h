@@ -3,7 +3,12 @@
 
 #include <QMainWindow>
 #include <QWebEngineView>
-#include <QWebChannel>
+#include <QUrl>
+#include <QFile>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QStringListModel>
 
 namespace Ui {
 class TrainingForm;
@@ -17,10 +22,19 @@ public:
     explicit TrainingForm(QWidget *parent = nullptr);
     ~TrainingForm();
 private slots:
-    void slot_create_form(QList <int>);
+    void slot_show_form();
+    void slot_count_ex();
+    void slot_end_try();
+private:
+    QString read_file(QString path);
+    QString set_JS_data(QString file_path, QString value_name, QString value);
+    void replace_value_in_str(QString &str, QString value_name, QString value);
 private:
     Ui::TrainingForm *ui;
     QWebEngineView web_view;
+    QStringList list_task_number;
+    QStringListModel string_model;
+    QString resource_path;
 };
 
 #endif // TRAININGFORM_H

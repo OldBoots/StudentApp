@@ -6,19 +6,7 @@
         <file>plus.png</file>
         <file>minus.png</file>
         <file>Url.txt</file>
-        <file>ReadTask1</file>
-        <file>js</file>
-        <file>ReadTask0</file>
         <file>MyStyle.css</file>
-        <file>test0.html</file>
-        <file>test1.html</file>
-        <file>test2.html</file>
-        <file>test3.html</file>
-        <file>test4.html</file>
-        <file>test5.html</file>
-        <file>ReadTask2</file>
-        <file>ReadTask3</file>
-        <file>ReadTask4</file>
-        <file>ReadTask5</file>
+        <file>ReadCountTasks</file>
     </qresource>
 </RCC>

@@ -26,9 +26,10 @@ private slots:
     void slot_create();
     void slot_open();
 signals:
-    void sign_cend_list(QList <int>);
+    void sign_show_training_form();
 private:
     QString load_style(QString path);
+    TrainingForm training_form;
 private:
     Ui::Dialog *ui;
 };

@@ -5,6 +5,10 @@ div.pbody{
     background-color: rgba(48, 213, 200, 0.2);
 }
 
+div.prob_type{
+    display: none;
+}
+
 body{
 background-color: rgba(237, 237, 237, 1);
 }
@@ -19,6 +23,13 @@ textarea.field{
     background: transparent;
     border: none;
     text-align: center;
+}
+
+input.number_field {
+  -moz-appearance: textfield;
+}
+.number_field::-webkit-inner-spin-button {
+  display: none;
 }
 
 input.table_field{

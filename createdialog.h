@@ -43,7 +43,6 @@ private:
     QStringList list_url;
     int count_quest;
     int num_quest;
-    int current_type;
     QString body_html;
     QList<QHBoxLayout*> layout_list;
     int cur_num;

@@ -19,6 +19,7 @@ Dialog::Dialog(QWidget *parent)
 
     connect(ui->butt_close, SIGNAL(clicked()), SLOT(close()));
     connect(ui->butt_create, SIGNAL(clicked()), SLOT(slot_create()));
+    connect(this, SIGNAL(sign_show_training_form()), &training_form, SLOT(slot_show_form()));
 }
 
 
@@ -32,6 +33,8 @@ void Dialog::slot_create()
     CreateDialog create_dialog;
     if(create_dialog.exec()){
         qDebug("pizza");
+        emit sign_show_training_form();
+        this->hide();
     }
 }
 
