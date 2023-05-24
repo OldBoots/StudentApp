@@ -46,7 +46,7 @@ void TrainingForm::slot_end_try()
 {
     QString buf;
     for(int i = 0; i < list_task_number.size(); i++){
-        web_view.page()->runJavaScript(set_JS_data(resource_path + "GetTaskType.js", "index_task", QString::number(i)), [&]
+        web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "GetTaskType.js"), "index_task", QString::number(i)), [&]
                                        (QVariant result) {
                                            buf = result.toString();
                                        });
@@ -55,7 +55,7 @@ void TrainingForm::slot_end_try()
         }
         if(buf == "string"){
             buf.clear();
-            web_view.page()->runJavaScript(set_JS_data(resource_path + "CheckStringSolution.js", "index_task", QString::number(i)), [&]
+            web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckStringSolution.js"), "index_task", QString::number(i)), [&]
                                            (QVariant result) {
                                                buf = result.toString();
                                            });
@@ -88,9 +88,11 @@ void TrainingForm::replace_value_in_str(QString &str, QString value_name, QStrin
     str = str.left(index) + value + str.right(str.size() - (index + temp_str.size()));
 }
 
-QString TrainingForm::set_JS_data(QString file_path, QString value_name, QString value)
+QString TrainingForm::set_JS_data(QString file_str, QString value_name, QString value)
 {
-    QString str_file = read_file(file_path);
-    replace_value_in_str(str_file, value_name, value);
-    return str_file;
+    QString str = file_str;
+    replace_value_in_str(str, value_name, value);
+    qDebug("__________________________________________________________________");
+    qDebug() << str;
+    return str;
 }

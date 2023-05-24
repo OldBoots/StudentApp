@@ -34,9 +34,10 @@ signals:
     void sign_task_processing_completed();
     void sign_task_parsing_completed();
 private:
-    QString load_file(QString path);
+    QString read_file(QString path);
+    QString set_JS_data(QString file_path, QString value_name, QString value);
     void load_url();
-    QString set_JS_data(QString file);
+    void replace_value_in_str(QString &str, QString value_name, QString value);
 private:
     Ui::CreateDialog *ui;
     QWebEngineView web_page;
@@ -48,6 +49,7 @@ private:
     int cur_num;
     QTimer timer_waiting;
     bool flag_overrun;
+    QString resource_path;
 };
 
 #endif // CREATEDIALOG_H

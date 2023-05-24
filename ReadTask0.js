@@ -64,7 +64,7 @@ function createSubForm(){
 }
 
 var count = ~count~;
-var num_quest = ~quest~;
+var num_quest = ~num_quest~;
 
 function main() {
     removeAllTag("a");

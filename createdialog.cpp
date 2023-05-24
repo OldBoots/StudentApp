@@ -9,12 +9,13 @@ CreateDialog::CreateDialog(QWidget *parent) :
     layout_list = ui->verticalLayout->findChildren<QHBoxLayout*>();
     QPushButton *butt;
     QSpinBox *spin_box;
+    resource_path = "C:/Qt/Project/StudentApp/";
     for(int i = 0; i < layout_list.size(); ++i){
         if(layout_list[i]->objectName().left(7) == "hlayout"){
             butt = qobject_cast<QPushButton*>(layout_list[i]->itemAt(2)->widget());
             butt->setFixedSize(16,16);
             butt->setIcon(QPixmap(":/minus.png").scaled(8,8));
-            butt->setStyleSheet(load_file(":/StyleButtPlasMinus.css"));
+            butt->setStyleSheet(read_file(":/StyleButtPlasMinus.css"));
             connect(butt, SIGNAL(clicked()), SLOT(slot_minus()));
 
             spin_box = qobject_cast<QSpinBox*>(layout_list[i]->itemAt(3)->widget());
@@ -24,7 +25,7 @@ CreateDialog::CreateDialog(QWidget *parent) :
             butt = qobject_cast<QPushButton*>(layout_list[i]->itemAt(4)->widget());
             butt->setFixedSize(16,16);
             butt->setIcon(QPixmap(":/plus.png").scaled(8,8));
-            butt->setStyleSheet(load_file(":/StyleButtPlasMinus.css"));
+            butt->setStyleSheet(read_file(":/StyleButtPlasMinus.css"));
             connect(butt, SIGNAL(clicked()), SLOT(slot_plus()));
         }else{
             layout_list.remove(i);
@@ -98,7 +99,7 @@ void CreateDialog::slot_task_processing()
     if(value != 0){
         count_quest = value;
         if(ui->check_box_lockal_base->isChecked()){
-            web_page.load(QUrl::fromLocalFile("C:/Qt/Project/StudentApp/test" + QString::number(cur_num) + ".html"));
+            web_page.load(QUrl::fromLocalFile(resource_path + "test" + QString::number(cur_num) + ".html"));
         } else{
             //            web_page.load(QUrl(list_url[cur_num]));
         }
@@ -117,7 +118,11 @@ void CreateDialog::slot_parse_tasks()
 {
     timer_waiting.stop();
     QString buf;
-    web_page.page()->runJavaScript(set_JS_data("C:/Qt/Project/StudentApp/ReadTask" + QString::number(cur_num) + ".js"), [&]
+    QString temp_str;
+    temp_str = read_file(resource_path + "ReadTask" + QString::number(cur_num) + ".js");
+    temp_str = set_JS_data(temp_str, "count", QString::number(count_quest));
+    temp_str = set_JS_data(temp_str, "num_quest", QString::number(num_quest));
+    web_page.page()->runJavaScript(temp_str, [&]
                                    (QVariant result) {
                                        buf = result.toString();
                                        if(buf.size() < 10){
@@ -144,7 +149,7 @@ void CreateDialog::slot_parse_tasks()
 
 void CreateDialog::slot_show_web_page()
 {
-    QFile file("C:/Qt/Project/StudentApp/html.html");
+    QFile file(resource_path + "html.html");
     QTextStream stream(&file);
     file.open(QIODevice::WriteOnly);
     stream << "<html>" << "<body>" << "<link rel=\"stylesheet\" href=\"qrc:/MyStyle.css\">" << body_html << "</body>" << "</html>";
@@ -159,7 +164,7 @@ CreateDialog::~CreateDialog()
     delete ui;
 }
 
-QString CreateDialog::load_file(QString path)
+QString CreateDialog::read_file(QString path)
 {
     QString str;
     QFile file(path);
@@ -179,17 +184,18 @@ void CreateDialog::load_url()
     file.close();
 }
 
-QString CreateDialog::set_JS_data(QString file_path)
-{
-    QString str_file;
+void CreateDialog::replace_value_in_str(QString &str, QString value_name, QString value){
     int index;
-    QFile file(file_path);
-    file.open(QIODevice::ReadOnly);
-    str_file = file.readAll();
-    file.close();
-    index = str_file.indexOf("~count~");
-    str_file = str_file.left(index) + QString::number(count_quest) + str_file.right(str_file.size() - (index + 7));
-    index = str_file.indexOf("~quest~");
-    str_file = str_file.left(index) + QString::number(num_quest) + str_file.right(str_file.size() - (index + 7));
-    return str_file;
+    QString temp_str = "~" + value_name + "~";
+    index = str.indexOf(temp_str);
+    str = str.left(index) + value + str.right(str.size() - (index + temp_str.size()));
+}
+
+QString CreateDialog::set_JS_data(QString file_str, QString value_name, QString value)
+{
+    QString str = file_str;
+    replace_value_in_str(str, value_name, value);
+    qDebug("__________________________________________________________________");
+    qDebug() << str;
+    return str;
 }
