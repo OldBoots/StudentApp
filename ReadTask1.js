@@ -12,10 +12,10 @@ function removeAllClass(className){
 function setLineEdit(){
     let arr_temp_pbody = document.getElementsByClassName("pbody");
     for(let i = 0; i < arr_temp_pbody.length; i++){
-        let temp_input = document.createElement("input");
-        temp_input.type = "number";
-        temp_input.className = "number_field";
-        arr_temp_pbody[i].appendChild(temp_input);
+        let input = document.createElement("input");
+        input.type = "number";
+        input.className = "number_field";
+        arr_temp_pbody[i].appendChild(input);
     }
 }
 
