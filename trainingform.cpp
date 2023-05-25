@@ -99,6 +99,21 @@ void TrainingForm::slot_end_try()
                 qDebug() << buf;
             }
         }
+        if(buf == "numbertable"){
+            buf.clear();
+            web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckNumberTableSolution.js"), "index_task", QString::number(i)), [&]
+                                      (QVariant result) {
+                                          buf = result.toString();
+                                      });
+            while(buf.isEmpty()){
+                QApplication::processEvents();
+            }
+            if(buf == "true"){
+                qDebug() << buf;
+            } else{
+                qDebug() << buf;
+            }
+        }
     }
 }
 

@@ -26,14 +26,20 @@ textarea.field{
 }
 
 input.number_field {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
+
 .number_field::-webkit-inner-spin-button {
   display: none;
 }
 
-input.table_field{
+input.table_number_field{
+    -moz-appearance: textfield;
     background: transparent;
     border: none;
     width: calc(10vw);
+}
+
+.table_number_field::-webkit-inner-spin-button {
+  display: none;
 }
