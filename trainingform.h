@@ -29,6 +29,7 @@ private:
     QString read_file(QString path);
     QString set_JS_data(QString file_path, QString value_name, QString value);
     void replace_value_in_str(QString &str, QString value_name, QString value);
+    bool check_task_answer(QString file_name, int index);
 private:
     Ui::TrainingForm *ui;
     QWebEngineView web_view;

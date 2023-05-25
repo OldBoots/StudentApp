@@ -57,7 +57,7 @@ function removeAllTag(tagName){
 function correctionTaskNumber(){
     let temp_nums = document.getElementsByClassName("prob_nums");
     for(let j = 0; j < temp_nums.length; j++){
-        temp_nums[j].textContent = "№ " + (num_quest + j + 1) + " - Тип 5";
+        temp_nums[j].textContent = "№ " + (num_quest + j + 1) + " - Тип 6";
     }
 }
 

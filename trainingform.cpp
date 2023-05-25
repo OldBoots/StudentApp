@@ -68,8 +68,9 @@ void TrainingForm::slot_end_try()
             } else{
                 qDebug() << buf;
             }
+            check_task_answer(,i);
         }
-        if(buf == "number"){
+        if(buf == "number" || buf == "sequence"){
             buf.clear();
             web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckNumberSolution.js"), "index_task", QString::number(i)), [&]
                                       (QVariant result) {
@@ -83,38 +84,37 @@ void TrainingForm::slot_end_try()
             } else{
                 qDebug() << buf;
             }
+            check_task_answer("CheckNumberSolution.js", i);
         }
         if(buf == "numberimg"){
             buf.clear();
-            web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckNumberImgSolution.js"), "index_task", QString::number(i)), [&]
-                                      (QVariant result) {
-                                          buf = result.toString();
-                                      });
-            while(buf.isEmpty()){
-                QApplication::processEvents();
-            }
-            if(buf == "true"){
-                qDebug() << buf;
-            } else{
-                qDebug() << buf;
-            }
+            check_task_answer("CheckNumberImgSolution.js", i);
         }
         if(buf == "numbertable"){
             buf.clear();
-            web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckNumberTableSolution.js"), "index_task", QString::number(i)), [&]
-                                      (QVariant result) {
-                                          buf = result.toString();
-                                      });
-            while(buf.isEmpty()){
-                QApplication::processEvents();
-            }
-            if(buf == "true"){
-                qDebug() << buf;
-            } else{
-                qDebug() << buf;
-            }
+            check_task_answer("CheckNumberTableSolution.js", i);
+        }
+        if(buf == "multianswer"){
+            buf.clear();
+            check_task_answer("CheckMultiAnswerSolution.js", i);
         }
     }
+}
+
+bool TrainingForm::check_task_answer(QString file_nmae, int index)
+{
+    QString temp_str;
+    web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + file_nmae), "index_task", QString::number(index)), [&]
+                                   (QVariant result) {
+                                       temp_str = result.toString();
+                                   });
+    while(temp_str.isEmpty()){
+        QApplication::processEvents();
+    }
+    if(temp_str == "true"){
+        return true;
+    }
+    return false;
 }
 
 QString TrainingForm::read_file(QString path)
@@ -134,11 +134,11 @@ void TrainingForm::replace_value_in_str(QString &str, QString value_name, QStrin
     str = str.left(index) + value + str.right(str.size() - (index + temp_str.size()));
 }
 
+
+
 QString TrainingForm::set_JS_data(QString file_str, QString value_name, QString value)
 {
     QString str = file_str;
     replace_value_in_str(str, value_name, value);
-//    qDebug("__________________________________________________________________");
-//    qDebug() << str;
     return str;
 }
