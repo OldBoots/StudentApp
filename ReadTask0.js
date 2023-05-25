@@ -70,6 +70,7 @@ function main() {
     removeAllTag("a");
     removeAllClass("outer_number");
     removeAllClass("briefcase");
+    removeAllClass("answer");
     createSubForm();
     correctionTaskNumber();
     setTypeTask();

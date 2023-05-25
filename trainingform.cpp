@@ -19,7 +19,7 @@ TrainingForm::~TrainingForm()
 
 void TrainingForm::slot_show_form()
 {
-    web_view.page()->load(QUrl::fromLocalFile("C:\\Qt\\Project\\StudentApp\\html.html"));
+    web_view.page()->load(QUrl::fromLocalFile(resource_path + "html.html"));
     this->show();
     ui->scrollArea->setFixedSize(200, 300);
 }
@@ -46,6 +46,7 @@ void TrainingForm::slot_end_try()
 {
     QString buf;
     for(int i = 0; i < list_task_number.size(); i++){
+        buf.clear();
         web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "GetTaskType.js"), "index_task", QString::number(i)), [&]
                                        (QVariant result) {
                                            buf = result.toString();
@@ -59,6 +60,21 @@ void TrainingForm::slot_end_try()
                                            (QVariant result) {
                                                buf = result.toString();
                                            });
+            while(buf.isEmpty()){
+                QApplication::processEvents();
+            }
+            if(buf == "true"){
+                qDebug() << buf;
+            } else{
+                qDebug() << buf;
+            }
+        }
+        if(buf == "number"){
+            buf.clear();
+            web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckNumberSolution.js"), "index_task", QString::number(i)), [&]
+                                      (QVariant result) {
+                                          buf = result.toString();
+                                      });
             while(buf.isEmpty()){
                 QApplication::processEvents();
             }
@@ -92,7 +108,7 @@ QString TrainingForm::set_JS_data(QString file_str, QString value_name, QString 
 {
     QString str = file_str;
     replace_value_in_str(str, value_name, value);
-    qDebug("__________________________________________________________________");
-    qDebug() << str;
+//    qDebug("__________________________________________________________________");
+//    qDebug() << str;
     return str;
 }

@@ -8,15 +8,15 @@ function func() {
         for(let i = 0; i < list_variant_answer.length; i++){
             if(list_variant_answer[i] === field_text){
         //        return "true";
-                return answer_text.toLowerCase() + " + " + field_text.toLowerCase();
+                return answer_text + " + " + field_text;
             }
         }
     }else{
         if(answer_text === field_text){
     //        return "true";
-            return answer_text.toLowerCase() + " + " + field_text.toLowerCase();
+            return answer_text + " + " + field_text;
         }
     }
     //        return "false";
-            return answer_text.toLowerCase() + " - " + field_text.toLowerCase();
+            return answer_text + " - " + field_text;
 } func();
