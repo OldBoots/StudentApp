@@ -8,8 +8,11 @@ TrainingForm::TrainingForm(QWidget *parent) :
     ui->setupUi(this);
     ui->horizontalLayout->addWidget(&web_view);
     resource_path = "C:/Qt/Project/StudentApp/";
-    connect(&web_view, SIGNAL(loadFinished(bool)), SLOT(slot_count_ex()));
+    ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    flag_end_try = false;
+    connect(&web_view, SIGNAL(loadFinished(bool)), SLOT(slot_show_number_task()));
     connect(ui->butt_end_try, SIGNAL(clicked(bool)), SLOT(slot_end_try()));
+    connect(ui->listView, SIGNAL(clicked(QModelIndex)), SLOT(slot_go_to_task(QModelIndex)));
 }
 
 TrainingForm::~TrainingForm()
@@ -24,28 +27,28 @@ void TrainingForm::slot_show_form()
     ui->scrollArea->setFixedSize(200, 300);
 }
 
-void TrainingForm::slot_count_ex()
+void TrainingForm::slot_show_number_task()
 {
     int count = 0;
-    web_view.page()->runJavaScript(read_file(":/ReadCountTasks"), [&]
+    web_view.page()->runJavaScript("document.getElementsByClassName(\"prob_nums\").length", [&]
                                    (QVariant result)->void {
                                        count = result.toInt();
-        qDebug() << count;
                                    });
     while(count == 0){
         QApplication::processEvents();
     }
     for(int i = 0; i < count; i++){
-        list_task_number.push_back("Задание номер " + QString::number(i + 1));
+        list_task_number << "Задание номер " + QString::number(i + 1);
+                                                               string_model.appendRow(new QStandardItem(list_task_number[i]));
     }
-    string_model.setStringList(list_task_number);
     ui->listView->setModel(&string_model);
 }
 
 void TrainingForm::slot_end_try()
 {
     QString buf;
-    for(int i = 0; i < list_task_number.size(); i++){
+    int result;
+    for(int i = 0; i < string_model.rowCount(); i++){
         buf.clear();
         web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "GetTaskType.js"), "index_task", QString::number(i)), [&]
                                        (QVariant result) {
@@ -55,66 +58,77 @@ void TrainingForm::slot_end_try()
             QApplication::processEvents();
         }
         if(buf == "string"){
-            buf.clear();
-            web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckStringSolution.js"), "index_task", QString::number(i)), [&]
-                                           (QVariant result) {
-                                               buf = result.toString();
-                                           });
-            while(buf.isEmpty()){
-                QApplication::processEvents();
-            }
-            if(buf == "true"){
-                qDebug() << buf;
-            } else{
-                qDebug() << buf;
-            }
-            check_task_answer(,i);
+            result = check_task_answer("CheckStringSolution.js", i);
+        } else if(buf == "number" || buf == "sequence"){
+            result = check_task_answer("CheckNumberSolution.js", i);
+        } else if(buf == "numberimg"){
+            result = check_task_answer("CheckNumberImgSolution.js", i);
+        } else if(buf == "numbertable"){
+            result = check_task_answer("CheckNumberTableSolution.js", i);
+        } else if(buf == "multianswer"){
+            result = check_task_answer("CheckMultiAnswerSolution.js", i);
+        } else{
+            QMessageBox::warning(this, tr("Ошибка"),
+                                           tr("Не получается определить тип задания."));
         }
-        if(buf == "number" || buf == "sequence"){
-            buf.clear();
-            web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "CheckNumberSolution.js"), "index_task", QString::number(i)), [&]
-                                      (QVariant result) {
-                                          buf = result.toString();
-                                      });
-            while(buf.isEmpty()){
-                QApplication::processEvents();
-            }
-            if(buf == "true"){
-                qDebug() << buf;
-            } else{
-                qDebug() << buf;
-            }
-            check_task_answer("CheckNumberSolution.js", i);
-        }
-        if(buf == "numberimg"){
-            buf.clear();
-            check_task_answer("CheckNumberImgSolution.js", i);
-        }
-        if(buf == "numbertable"){
-            buf.clear();
-            check_task_answer("CheckNumberTableSolution.js", i);
-        }
-        if(buf == "multianswer"){
-            buf.clear();
-            check_task_answer("CheckMultiAnswerSolution.js", i);
+        buf.clear();
+        show_results(result, i);
+        web_view.page()->runJavaScript(read_file(resource_path + "DisableForm.js"));
+        ui->butt_end_try->setEnabled(false);
+    }
+}
+
+void TrainingForm::slot_close()
+{
+    if(!flag_end_try){
+        CloseDialog dialog(this);
+        if(dialog.exec()){
+            close();
         }
     }
 }
 
-bool TrainingForm::check_task_answer(QString file_nmae, int index)
+void TrainingForm::show_results(int result, int index)
 {
-    QString temp_str;
+    QModelIndex index_model_data = string_model.index(index, 0);
+    string_model.setData(index_model_data, QString::number(qCeil(((double)100 / (double)3) * (double)result)) + "% " + list_task_number[index]);
+    QColor result_color;
+    switch (result) {
+    case 0:
+        result_color.setRgb(255, 0, 0);
+        break;
+    case 1:
+        result_color.setRgb(250, 115, 0);
+        break;
+    case 2:
+        result_color.setRgb(154, 205, 50);
+        break;
+    case 3:
+        result_color.setRgb(100, 255, 50);
+        break;
+    default:
+        break;
+    }
+    string_model.setData(index_model_data, QBrush(result_color), Qt::ForegroundRole);
+}
+
+void TrainingForm::slot_go_to_task(QModelIndex data_index)
+{
+    QStringList temp_list = string_model.data(data_index).toString().split(" ");
+    web_view.page()->runJavaScript("document.getElementById(\"nums_id" + temp_list[temp_list.size() - 1] + "\").scrollIntoView();");
+}
+
+int TrainingForm::check_task_answer(QString file_nmae, int index)
+{
+    int result = -1;
     web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + file_nmae), "index_task", QString::number(index)), [&]
-                                   (QVariant result) {
-                                       temp_str = result.toString();
+                                   (QVariant temp) {
+                                       result = temp.toInt();
                                    });
-    while(temp_str.isEmpty()){
+    while(result == -1){
         QApplication::processEvents();
     }
-    if(temp_str == "true"){
-        return true;
-    }
-    return false;
+    return result;
 }
 
 QString TrainingForm::read_file(QString path)
@@ -133,8 +147,6 @@ void TrainingForm::replace_value_in_str(QString &str, QString value_name, QStrin
     index = str.indexOf(temp_str);
     str = str.left(index) + value + str.right(str.size() - (index + temp_str.size()));
 }
-
-
 
 QString TrainingForm::set_JS_data(QString file_str, QString value_name, QString value)
 {

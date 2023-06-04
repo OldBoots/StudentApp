@@ -9,17 +9,20 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    closedialog.cpp \
     createdialog.cpp \
     main.cpp \
     dialog.cpp \
     trainingform.cpp
 
 HEADERS += \
+    closedialog.h \
     createdialog.h \
     dialog.h \
     trainingform.h
 
 FORMS += \
+    closedialog.ui \
     createdialog.ui \
     dialog.ui \
     trainingform.ui

@@ -8,9 +8,9 @@ function func() {
         field_text += arr_field[i].value;
     }
     if(answer_text === field_text){
-        //        return "true";
-        return answer_text + " + " + field_text;
+                return 3;
+//        return answer_text + " + " + field_text;
     }
-    //        return "false";
-    return answer_text + " - " + field_text;
+            return 0;
+//    return answer_text + " - " + field_text;
 }func();

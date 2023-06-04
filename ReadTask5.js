@@ -36,6 +36,7 @@ function removeAllTag(tagName){
 function correctionTaskNumber(){
     let temp_nums = document.getElementsByClassName("prob_nums");
     for(let j = 0; j < temp_nums.length; j++){
+        temp_nums[j].id = "nums_id" + (num_quest + j + 1);
         temp_nums[j].textContent = "№ " + (num_quest + j + 1) + " - Тип 8";
     }
 }
@@ -52,13 +53,19 @@ function setTypeTask(){
 
 function createSubForm(){
     let arr_main_div = document.querySelectorAll(".prob_maindiv");
+    let arr_bool = new Array(arr_main_div.length).fill(true);
+    let temp_num;
     let temp_task;
     document.body.innerHTML = "<link rel=\"stylesheet\" href=\"qrc:/MyStyle.css\">";
     for(let i = 0; i < count;){
-        temp_task = arr_main_div[getRandomInt(arr_main_div.length)];
-        if(/\d/.test(temp_task.getElementsByClassName("prob_answer")[0].getElementsByTagName("div")[1].innerHTML)){
-            document.body.appendChild(temp_task);
-            i++;
+        temp_num = getRandomInt(arr_main_div.length);
+        if(arr_bool[temp_num]){
+            arr_bool[temp_num] = false;
+            temp_task = arr_main_div[temp_num];
+            if(/\d/.test(temp_task.getElementsByClassName("prob_answer")[0].getElementsByTagName("div")[1].innerHTML)){
+                document.body.appendChild(temp_task);
+                i++;
+            }
         }
     }
 }

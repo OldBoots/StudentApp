@@ -85,7 +85,7 @@ void CreateDialog::slot_create_form()
 void CreateDialog::slot_waiting_overrun()
 {
     flag_overrun = true;
-    qDebug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+//    qDebug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     ui->label_status->setText("Не удалось загрузить задания.\nПопробуйте использовать локальную базу данных.");
     timer_waiting.stop();
 }
