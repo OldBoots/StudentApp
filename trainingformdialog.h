@@ -1,7 +1,7 @@
-#ifndef TRAININGFORM_H
-#define TRAININGFORM_H
+#ifndef TRAININGFORMDIALOG_H
+#define TRAININGFORMDIALOG_H
 
-#include <QMainWindow>
+#include <QDialog>
 #include <QWebEngineView>
 #include <QUrl>
 #include <QFile>
@@ -12,21 +12,22 @@
 #include <QRegularExpression>
 #include <QMessageBox>
 #include <QStandardItemModel>
+#include <QFileInfo>
 #include "closedialog.h"
 
 namespace Ui {
-class TrainingForm;
+class TrainingFormDialog;
 }
 
-class TrainingForm : public QMainWindow
+class TrainingFormDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit TrainingForm(QWidget *parent = nullptr);
-    ~TrainingForm();
+    explicit TrainingFormDialog(QWidget *parent = nullptr);
+    ~TrainingFormDialog();
 private slots:
-    void slot_show_form();
+//    void slot_show_form();
     void slot_show_number_task();
     void slot_end_try();
     void slot_close();
@@ -37,8 +38,13 @@ private:
     void replace_value_in_str(QString &str, QString value_name, QString value);
     void show_results(int result, int index_model_data);
     int check_task_answer(QString file_name, int index);
+    void open_form();
+    void save_prog_num_fields(QString file_name);
+    void save_prog_num_table_fields(QString file_name);
+    void save_prog_text_fields(QString file_name);
+    void save_prog_multi_fields(QString file_name);
 private:
-    Ui::TrainingForm *ui;
+    Ui::TrainingFormDialog *ui;
     QWebEngineView web_view;
     QStringList list_task_number;
     QStandardItemModel string_model;
@@ -46,4 +52,4 @@ private:
     bool flag_end_try;
 };
 
-#endif // TRAININGFORM_H
+#endif // TRAININGFORMDIALOG_H

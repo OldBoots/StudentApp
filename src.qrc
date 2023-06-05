@@ -8,5 +8,9 @@
         <file>Url.txt</file>
         <file>MyStyle.css</file>
         <file>DisableForm.js</file>
+        <file>SaveNumberField.js</file>
+        <file>SaveNumberTableField.js</file>
+        <file>SaveTextField.js</file>
+        <file>SaveMultiField.js</file>
     </qresource>
 </RCC>

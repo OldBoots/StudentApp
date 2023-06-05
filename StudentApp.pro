@@ -13,19 +13,19 @@ SOURCES += \
     createdialog.cpp \
     main.cpp \
     dialog.cpp \
-    trainingform.cpp
+    trainingformdialog.cpp
 
 HEADERS += \
     closedialog.h \
     createdialog.h \
     dialog.h \
-    trainingform.h
+    trainingformdialog.h
 
 FORMS += \
     closedialog.ui \
     createdialog.ui \
     dialog.ui \
-    trainingform.ui
+    trainingformdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

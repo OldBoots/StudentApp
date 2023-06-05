@@ -9,7 +9,7 @@ CreateDialog::CreateDialog(QWidget *parent) :
     layout_list = ui->verticalLayout->findChildren<QHBoxLayout*>();
     QPushButton *butt;
     QSpinBox *spin_box;
-    resource_path = "C:/Qt/Project/StudentApp/";
+    resource_path = "C:/Qt/project/StudentApp/";
     for(int i = 0; i < layout_list.size(); ++i){
         if(layout_list[i]->objectName().left(7) == "hlayout"){
             butt = qobject_cast<QPushButton*>(layout_list[i]->itemAt(2)->widget());
@@ -78,15 +78,15 @@ void CreateDialog::slot_create_form()
     num_quest = 0;
     body_html.clear();
     flag_overrun = false;
-    ui->label_status->clear();
     emit sign_task_processing_completed();
 }
 
 void CreateDialog::slot_waiting_overrun()
 {
     flag_overrun = true;
-//    qDebug("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    ui->label_status->setText("Не удалось загрузить задания.\nПопробуйте использовать локальную базу данных.");
+    QMessageBox::warning(this, tr("Ошибка"),
+                                           tr("Не удалось загрузить задания.\nПопробуйте использовать локальную базу данных."));
+//    ui->label_status->setText("Не удалось загрузить задания.\nПопробуйте использовать локальную базу данных.");
     timer_waiting.stop();
 }
 
@@ -103,7 +103,7 @@ void CreateDialog::slot_task_processing()
         } else{
             //            web_page.load(QUrl(list_url[cur_num]));
         }
-        timer_waiting.start(5000);
+        timer_waiting.start(8000);
     }else{
         ++cur_num;
         if(cur_num < layout_list.size()){
@@ -129,7 +129,7 @@ void CreateDialog::slot_parse_tasks()
                                            buf.clear();
                                        }
                                    });
-    timer_waiting.start(5000);
+    timer_waiting.start(8000);
     while(buf.isEmpty() && !flag_overrun){
         QApplication::processEvents();
     }
@@ -152,9 +152,11 @@ void CreateDialog::slot_show_web_page()
     QFile file(resource_path + "html.html");
     QTextStream stream(&file);
     file.open(QIODevice::WriteOnly);
-    stream << "<html>" << "<body>" << "<link rel=\"stylesheet\" href=\"qrc:/MyStyle.css\">" << body_html << "</body>" << "</html>";
+    stream << "<html>"
+           << "<body>" << "<link rel=\"stylesheet\" href=\"qrc:/MyStyle.css\">" << body_html << "</body>"
+           << "</html>";
     file.close();
-    emit accept();
+    accept();
 }
 
 

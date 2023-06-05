@@ -29,6 +29,9 @@ input.number_field {
     -moz-appearance: textfield;
 }
 
+input.checkbox_field {
+}
+
 .number_field::-webkit-inner-spin-button {
   display: none;
 }

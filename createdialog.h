@@ -9,7 +9,7 @@
 #include <QWebEngineView>
 #include <QHBoxLayout>
 #include <QTimer>
-#include "trainingform.h"
+#include <QMessageBox>
 
 namespace Ui {
 class CreateDialog;

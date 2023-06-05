@@ -18,7 +18,7 @@ function setLineEdit(){
         for(let j = 0, num_variant = 1; j < arr_p.length; j++){
             if(/\d/.test(arr_p[j].innerText.substr(0, 2))){
                 temp_str = arr_p[j].innerText;
-                arr_p[j].innerHTML = "<input type=\"checkbox\" name=\"" + num_variant + "\">" + temp_str.substr(2);
+                arr_p[j].innerHTML = "<input class= \"checkbox_field\" type=\"checkbox\" name=\"" + num_variant + "\">" + temp_str.substr(2);
                 num_variant++;
             }
         }

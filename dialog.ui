@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>308</width>
-    <height>178</height>
+    <height>280</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,9 +32,44 @@
       <item>
        <widget class="QPushButton" name="butt_create">
         <property name="text">
-         <string>Создать бланк</string>
+         <string>Создать тренировочный бланк</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="butt_continue">
+        <property name="text">
+         <string>Продолжить попытку</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_2">
+        <property name="styleSheet">
+         <string notr="true">border-radius: 10px;
+border-color: beige;
+background-color: #d4d4d4;</string>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QPushButton" name="butt_open">
