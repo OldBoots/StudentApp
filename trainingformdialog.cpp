@@ -16,22 +16,18 @@ TrainingFormDialog::TrainingFormDialog(QWidget *parent) :
     connect(ui->butt_end_try, SIGNAL(clicked(bool)), SLOT(slot_end_try()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), SLOT(slot_go_to_task(QModelIndex)));
     connect(ui->butt_close, SIGNAL(clicked(bool)), SLOT(slot_close()));
-//    setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
     this->setWindowFlags(Qt::Window);
 }
 
-//void TrainingFormDialog::closeEvent (QCloseEvent *event)
-//{
-//    slot_close();
-//}
+void TrainingFormDialog::closeEvent (QCloseEvent *event)
+{
+    Q_UNUSED(event);
+    slot_close();
+}
 
 void TrainingFormDialog::open_form()
 {
-    if(QFileInfo::exists(resource_path + "html.html")){
         web_view.page()->load(QUrl::fromLocalFile(resource_path + "html.html"));
-    }else{
-        this->reject();
-    }
 }
 
 void TrainingFormDialog::save_progress(QString field_type, QString file_name)
@@ -39,17 +35,17 @@ void TrainingFormDialog::save_progress(QString field_type, QString file_name)
     QString temp_str = "~~";
     QFile file(resource_path + file_name);
     QTextStream stream(&file);
+//    qDebug() << file_name;
     web_view.page()->runJavaScript(set_JS_data(read_file("SaveProgTasks.js"), "field_type", field_type), [&]
                                    (QVariant result) {
                                        temp_str = result.toString();
-                                       qDebug() << temp_str;
+//                                       qDebug() << temp_str;
                                    });
     while(temp_str == "~~"){
 //        qDebug() << temp_str;
         QApplication::processEvents();
     }
     if(temp_str != "-1"){
-        qDebug("fsrdgtfhyguh");
         file.open(QIODevice::WriteOnly);
         stream << temp_str;
         file.close();
@@ -125,11 +121,11 @@ void TrainingFormDialog::slot_end_try()
         }
         buf.clear();
         show_results(result, i);
-        flag_end_try = true;
-        web_view.page()->runJavaScript(read_file("DisableForm.js"));
-        web_view.page()->runJavaScript(read_file("ShowSolution.js"));
-        ui->butt_end_try->setEnabled(false);
     }
+    flag_end_try = true;
+    web_view.page()->runJavaScript(read_file("DisableForm.js"));
+    web_view.page()->runJavaScript(read_file("ShowSolution.js"));
+    ui->butt_end_try->setEnabled(false);
 }
 
 void TrainingFormDialog::slot_close()

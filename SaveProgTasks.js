@@ -1,10 +1,14 @@
 function get_fields(class_name) {
-    let arr_number_fields = document.getElementsByClassName(class_name);
+    let arr_fields = document.getElementsByClassName(class_name);
     let rezult_str = "";
-    if(arr_number_fields.length > 0){
-        for(let i = 0; i < arr_number_fields.length; i++){
-            rezult_str += arr_number_fields[i].value;
-            if(i < arr_number_fields.length - 1){
+    if(arr_fields.length > 0){
+        for(let i = 0; i < arr_fields.length; i++){
+            if(arr_fields[i].value.length === 0){
+                rezult_str += "empty";
+            }else{
+                rezult_str += arr_fields[i].value;
+            }
+            if(i < arr_fields.length - 1){
                 rezult_str += "~";
             }
         }
@@ -14,16 +18,16 @@ function get_fields(class_name) {
 }
 
 function get_checkbox() {
-    let arr_number_fields = document.getElementsByClassName("checkbox_field");
+    let arr_fields = document.getElementsByClassName("checkbox_field");
     let rezult_str = "";
-    if(arr_number_fields.length > 0){
-        for(let i = 0; i < arr_number_fields.length; i++){
-            if(arr_number_fields[i].checked){
+    if(arr_fields.length > 0){
+        for(let i = 0; i < arr_fields.length; i++){
+            if(arr_fields[i].checked){
                 rezult_str += "true";
             }else{
                 rezult_str += "false";
             }
-            if(i < arr_number_fields.length - 1){
+            if(i < arr_fields.length - 1){
                 rezult_str += "~";
             }
         }

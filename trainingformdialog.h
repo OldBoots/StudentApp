@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QStandardItemModel>
 #include <QFileInfo>
+#include <QCloseEvent>
 #include "closedialog.h"
 
 namespace Ui {
