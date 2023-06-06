@@ -32,6 +32,7 @@ private:
     QString load_style(QString path);
 private:
     Ui::Dialog *ui;
+    QString resource_path;
 };
 
 #endif // DIALOG_H

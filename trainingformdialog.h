@@ -28,21 +28,21 @@ public:
     ~TrainingFormDialog();
 private slots:
 //    void slot_show_form();
-    void slot_show_number_task();
+    void slot_finish_load_form();
     void slot_end_try();
     void slot_close();
     void slot_go_to_task(QModelIndex);
 private:
+    void show_number_task();
     QString read_file(QString path);
     QString set_JS_data(QString file_path, QString value_name, QString value);
     void replace_value_in_str(QString &str, QString value_name, QString value);
     void show_results(int result, int index_model_data);
     int check_task_answer(QString file_name, int index);
     void open_form();
-    void save_prog_num_fields(QString file_name);
-    void save_prog_num_table_fields(QString file_name);
-    void save_prog_text_fields(QString file_name);
-    void save_prog_multi_fields(QString file_name);
+    void save_progress(QString field_type, QString file_name);
+    void load_progress(QString field_type, QString file_name);
+    void closeEvent (QCloseEvent *event) override;
 private:
     Ui::TrainingFormDialog *ui;
     QWebEngineView web_view;

@@ -13,6 +13,8 @@ Dialog::Dialog(QWidget *parent)
     setStyleSheet("background:transparent;");
     ui->frame->setStyleSheet(load_style(":/StyleWindow.css"));
 
+    resource_path = "C:/Qt/project/StudentApp/";
+
     ui->butt_create->setStyleSheet(load_style(":/StyleButtMenu.css"));
     ui->butt_open->setStyleSheet(load_style(":/StyleButtMenu.css"));
     ui->butt_close->setStyleSheet(load_style(":/StyleButtMenu.css"));
@@ -21,7 +23,6 @@ Dialog::Dialog(QWidget *parent)
     connect(ui->butt_close, SIGNAL(clicked(bool)), SLOT(close()));
     connect(ui->butt_create, SIGNAL(clicked(bool)), SLOT(slot_create()));
     connect(ui->butt_continue, SIGNAL(clicked(bool)), SLOT(slot_continue()));
-//    connect(this, SIGNAL(sign_show_training_form()), &training_form, SLOT(slot_show_form()));
 }
 
 
@@ -39,9 +40,7 @@ void Dialog::slot_create()
         if(training_form.exec()){
             this->show();
         }else{
-            this->show();
-            QMessageBox::warning(this, tr("Предупреждение"),
-                                           tr("Тренировочный бланк отсутствует. Создайте тренировойчный бланк."));
+            this->close();
         }
     }
 }
@@ -53,12 +52,28 @@ void Dialog::slot_open()
 
 void Dialog::slot_continue()
 {
-    TrainingFormDialog training_form;
-    this->hide();
-    if(training_form.exec()){
-        this->show();
+    if(QFileInfo::exists(resource_path + "html.html")){
+        TrainingFormDialog training_form;
+//        this->hide();
+        if(!training_form.exec()){
+            QMessageBox m_box;
+            //        m_box.setWindowIcon();
+            m_box.setWindowTitle("Предупреждение");
+            m_box.setText("Форма не была открыта. Возможно тренировочный бланк удален, или поврежден. ");
+            m_box.setInformativeText("Создайте новый тренировочный бланк");
+            m_box.setDefaultButton(QMessageBox::Ok);
+            m_box.exec();
+        }
+//        this->show();
     }else{
-        this->close();
+        QMessageBox m_box;
+//        m_box.setWindowIcon();
+        m_box.setWindowTitle("Предупреждение");
+        m_box.setText("Тренировочный бланк отсутствует.");
+        m_box.setInformativeText("Создайте тренировойчный бланк.");
+        m_box.setDefaultButton(QMessageBox::Ok);
+        m_box.exec();
+//        this->show();
     }
 }
 

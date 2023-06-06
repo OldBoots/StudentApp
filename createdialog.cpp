@@ -72,12 +72,28 @@ void CreateDialog::slot_minus(){
     }
 }
 
+void CreateDialog::remove_last_try()
+{
+    QFile file;
+    file.setFileName(resource_path + "ProgNumber");
+    file.remove();
+    file.setFileName(resource_path + "ProgTable");
+    file.remove();
+    file.setFileName(resource_path + "ProgString");
+    file.remove();
+    file.setFileName(resource_path + "ProgCheckbox");
+    file.remove();
+    file.setFileName(resource_path + "html.html");
+    file.remove();
+}
+
 void CreateDialog::slot_create_form()
 {
     cur_num = 0;
     num_quest = 0;
     body_html.clear();
     flag_overrun = false;
+    remove_last_try();
     emit sign_task_processing_completed();
 }
 
@@ -197,7 +213,5 @@ QString CreateDialog::set_JS_data(QString file_str, QString value_name, QString 
 {
     QString str = file_str;
     replace_value_in_str(str, value_name, value);
-    qDebug("__________________________________________________________________");
-    qDebug() << str;
     return str;
 }

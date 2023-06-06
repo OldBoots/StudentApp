@@ -12,23 +12,21 @@ TrainingFormDialog::TrainingFormDialog(QWidget *parent) :
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     flag_end_try = false;
     open_form();
-    connect(&web_view, SIGNAL(loadFinished(bool)), SLOT(slot_show_number_task()));
+    connect(&web_view, SIGNAL(loadFinished(bool)), SLOT(slot_finish_load_form()));
     connect(ui->butt_end_try, SIGNAL(clicked(bool)), SLOT(slot_end_try()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), SLOT(slot_go_to_task(QModelIndex)));
     connect(ui->butt_close, SIGNAL(clicked(bool)), SLOT(slot_close()));
+//    setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
+    this->setWindowFlags(Qt::Window);
 }
+
+//void TrainingFormDialog::closeEvent (QCloseEvent *event)
+//{
+//    slot_close();
+//}
 
 void TrainingFormDialog::open_form()
 {
-    QFile file;
-    file.setFileName(resource_path + "ProgMultiField");
-    file.remove();
-    file.setFileName(resource_path + "ProgNumberField");
-    file.remove();
-    file.setFileName(resource_path + "ProgNumberTableField");
-    file.remove();
-    file.setFileName(resource_path + "ProgTextField");
-    file.remove();
     if(QFileInfo::exists(resource_path + "html.html")){
         web_view.page()->load(QUrl::fromLocalFile(resource_path + "html.html"));
     }else{
@@ -36,20 +34,22 @@ void TrainingFormDialog::open_form()
     }
 }
 
-void TrainingFormDialog::save_prog_num_fields(QString file_name)
+void TrainingFormDialog::save_progress(QString field_type, QString file_name)
 {
     QString temp_str = "~~";
-    QFile file(file_name);
+    QFile file(resource_path + file_name);
     QTextStream stream(&file);
-    web_view.page()->runJavaScript(read_file(resource_path + "SaveNumberField.js"), [&]
+    web_view.page()->runJavaScript(set_JS_data(read_file("SaveProgTasks.js"), "field_type", field_type), [&]
                                    (QVariant result) {
                                        temp_str = result.toString();
-                                       qDebug() << "num" << temp_str;
+                                       qDebug() << temp_str;
                                    });
     while(temp_str == "~~"){
+//        qDebug() << temp_str;
         QApplication::processEvents();
     }
     if(temp_str != "-1"){
+        qDebug("fsrdgtfhyguh");
         file.open(QIODevice::WriteOnly);
         stream << temp_str;
         file.close();
@@ -57,69 +57,29 @@ void TrainingFormDialog::save_prog_num_fields(QString file_name)
     temp_str.clear();
 }
 
-void TrainingFormDialog::save_prog_num_table_fields(QString file_name)
+void TrainingFormDialog::load_progress(QString field_type, QString file_name)
 {
-    QString temp_str = "~~";
-    QFile file(file_name);
-    QTextStream stream(&file);
-    web_view.page()->runJavaScript(read_file(resource_path + "SaveNumberTableField.js"), [&]
-                                   (QVariant result) {
-                                       temp_str = result.toString();
-                                       qDebug() << "num_tab" << temp_str;
-                                   });
-    while(temp_str == "~~"){
-        QApplication::processEvents();
-    }
-    if(temp_str != "-1"){
-        //        file.setFileName();
-        file.open(QIODevice::WriteOnly);
-        stream << temp_str;
+    if(QFileInfo::exists(resource_path + file_name)){
+        QString str, temp_js_str, ok;
+        QFile file(resource_path + file_name);
+        file.open(QIODevice::ReadOnly);
+        str = file.readAll();
         file.close();
+        if(!str.isEmpty()){
+            temp_js_str = read_file("LoadProgTasks.js");
+            temp_js_str = set_JS_data(temp_js_str, "field_type", field_type);
+            temp_js_str = set_JS_data(temp_js_str, "str", str);
+            web_view.page()->runJavaScript(temp_js_str, [&]
+                                           (QVariant result) {
+                                               ok = result.toString();
+                                               qDebug() << ok;
+                                           });
+            while(ok.isEmpty()){
+                QApplication::processEvents();
+            }
+        }
+        file.remove();
     }
-    temp_str.clear();
-}
-
-void TrainingFormDialog::save_prog_text_fields(QString file_name)
-{
-    QString temp_str = "~~";
-    QFile file(file_name);
-    QTextStream stream(&file);
-    web_view.page()->runJavaScript(read_file(resource_path + "SaveTextField.js"), [&]
-                                   (QVariant result) {
-                                       temp_str = result.toString();
-                                       qDebug() << "text" << temp_str;
-                                   });
-    while(temp_str == "~~"){
-        QApplication::processEvents();
-    }
-    if(temp_str != "-1"){
-        //        file.setFileName();
-        file.open(QIODevice::WriteOnly);
-        stream << temp_str;
-        file.close();
-    }
-    temp_str.clear();
-}
-
-void TrainingFormDialog::save_prog_multi_fields(QString file_name)
-{
-    QString temp_str = "~~";
-    QFile file(file_name);
-    QTextStream stream(&file);
-    web_view.page()->runJavaScript(read_file(resource_path + "SaveMultiField.js"), [&]
-                                   (QVariant result) {
-                                       temp_str = result.toString();
-                                       qDebug() << "multi" << temp_str;
-                                   });
-    while(temp_str == "~~"){
-        QApplication::processEvents();
-    }
-    if(temp_str != "-1"){
-        file.open(QIODevice::WriteOnly);
-        stream << temp_str;
-        file.close();
-    }
-    temp_str.clear();
 }
 
 TrainingFormDialog::~TrainingFormDialog()
@@ -127,21 +87,13 @@ TrainingFormDialog::~TrainingFormDialog()
     delete ui;
 }
 
-void TrainingFormDialog::slot_show_number_task()
+void TrainingFormDialog::slot_finish_load_form()
 {
-    int count = 0;
-    web_view.page()->runJavaScript("document.getElementsByClassName(\"prob_nums\").length", [&]
-                                   (QVariant result)->void {
-                                       count = result.toInt();
-                                   });
-    while(count == 0){
-        QApplication::processEvents();
-    }
-    for(int i = 0; i < count; i++){
-        list_task_number << "Задание номер " + QString::number(i + 1);
-                                                               string_model.appendRow(new QStandardItem(list_task_number[i]));
-    }
-    ui->listView->setModel(&string_model);
+    show_number_task();
+    load_progress("number", "ProgNumber");
+    load_progress("table", "ProgTable");
+    load_progress("string", "ProgString");
+    load_progress("checkbox", "ProgCheckbox");
 }
 
 void TrainingFormDialog::slot_end_try()
@@ -150,7 +102,7 @@ void TrainingFormDialog::slot_end_try()
     int result;
     for(int i = 0; i < string_model.rowCount(); i++){
         buf.clear();
-        web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + "GetTaskType.js"), "index_task", QString::number(i)), [&]
+        web_view.page()->runJavaScript(set_JS_data(read_file("GetTaskType.js"), "index_task", QString::number(i)), [&]
                                        (QVariant result) {
                                            buf = result.toString();
                                        });
@@ -174,8 +126,8 @@ void TrainingFormDialog::slot_end_try()
         buf.clear();
         show_results(result, i);
         flag_end_try = true;
-        web_view.page()->runJavaScript(read_file(resource_path + "DisableForm.js"));
-        web_view.page()->runJavaScript(read_file(resource_path + "ShowSolution.js"));
+        web_view.page()->runJavaScript(read_file("DisableForm.js"));
+        web_view.page()->runJavaScript(read_file("ShowSolution.js"));
         ui->butt_end_try->setEnabled(false);
     }
 }
@@ -193,10 +145,10 @@ void TrainingFormDialog::slot_close()
         QFile file(resource_path + "html.html");
         file.remove();
     }else{
-        save_prog_num_fields(resource_path + "ProgNumberField");
-        save_prog_num_table_fields(resource_path + "ProgNumberTableField");
-        save_prog_text_fields(resource_path + "ProgTextField");
-        save_prog_multi_fields(resource_path + "ProgMultiField");
+        save_progress("number", "ProgNumber");
+        save_progress("table", "ProgTable");
+        save_progress("string", "ProgString");
+        save_progress("checkbox", "ProgCheckbox");
     }
     this->accept();
 }
@@ -231,10 +183,27 @@ void TrainingFormDialog::slot_go_to_task(QModelIndex data_index)
     web_view.page()->runJavaScript("document.getElementById(\"nums_id" + temp_list[temp_list.size() - 1] + "\").scrollIntoView();");
 }
 
+void TrainingFormDialog::show_number_task()
+{
+    int count = 0;
+    web_view.page()->runJavaScript("document.getElementsByClassName(\"prob_nums\").length", [&]
+                                   (QVariant result)->void {
+                                       count = result.toInt();
+                                   });
+    while(count == 0){
+        QApplication::processEvents();
+    }
+    for(int i = 0; i < count; i++){
+        list_task_number << "Задание номер " + QString::number(i + 1);
+                                                   string_model.appendRow(new QStandardItem(list_task_number[i]));
+    }
+    ui->listView->setModel(&string_model);
+}
+
 int TrainingFormDialog::check_task_answer(QString file_nmae, int index)
 {
     int result = -1;
-    web_view.page()->runJavaScript(set_JS_data(read_file(resource_path + file_nmae), "index_task", QString::number(index)), [&]
+    web_view.page()->runJavaScript(set_JS_data(read_file(file_nmae), "index_task", QString::number(index)), [&]
                                    (QVariant temp) {
                                        result = temp.toInt();
                                    });
@@ -247,7 +216,7 @@ int TrainingFormDialog::check_task_answer(QString file_nmae, int index)
 QString TrainingFormDialog::read_file(QString path)
 {
     QString str;
-    QFile file(path);
+    QFile file(resource_path + path);
     file.open(QIODevice::ReadOnly);
     str = file.readAll();
     file.close();
