@@ -6,20 +6,29 @@ CreateDialog::CreateDialog(QWidget *parent) :
     ui(new Ui::CreateDialog)
 {
     ui->setupUi(this);
+    // Получчаем список дочерних layout из окна
     layout_list = ui->verticalLayout->findChildren<QHBoxLayout*>();
     QPushButton *butt;
     QSpinBox *spin_box;
     resource_path = "C:/Qt/project/StudentApp/";
+    // Проходимся по всем дочерним элементам из списка layout
     for(int i = 0; i < layout_list.size(); ++i){
         if(layout_list[i]->objectName().left(7) == "hlayout"){
+            // Получаем кнопку минус
             butt = qobject_cast<QPushButton*>(layout_list[i]->itemAt(2)->widget());
+            // Задаем ей размер
             butt->setFixedSize(16,16);
+            // Рисуем в ней знак минус
             butt->setIcon(QPixmap(":/minus.png").scaled(8,8));
+            // Применяем CSS код из файла
             butt->setStyleSheet(read_file(":/StyleButtPlasMinus.css"));
+            // Соединяем нажатие кнопки со слотом
             connect(butt, SIGNAL(clicked()), SLOT(slot_minus()));
-
+            // Получаем спин бокс
             spin_box = qobject_cast<QSpinBox*>(layout_list[i]->itemAt(3)->widget());
+            // Задаем размер
             spin_box->setFixedSize(30, 20);
+            // Убираем вертикальные кнопки
             spin_box->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
             butt = qobject_cast<QPushButton*>(layout_list[i]->itemAt(4)->widget());
@@ -32,16 +41,16 @@ CreateDialog::CreateDialog(QWidget *parent) :
         }
     }
 
-    load_url();
-
-//    ui->verticalLayout->addWidget(&web_page);
+//    load_url();
 
     connect(ui->butt_cancel, SIGNAL(clicked()), SLOT(reject()));
     connect(ui->butt_create, SIGNAL(clicked()), SLOT(slot_create_form()));
     connect(&web_page, SIGNAL(loadFinished(bool)), SLOT(slot_parse_tasks()));
+//    connect(&temp_page, SIGNAL(loadFinished(bool)), SLOT(slot_load_page()));
     connect(this, SIGNAL(sign_task_processing_completed()), SLOT(slot_task_processing()));
     connect(this, SIGNAL(sign_task_parsing_completed()), SLOT(slot_show_web_page()));
     connect(&timer_waiting, SIGNAL(timeout()), SLOT(slot_waiting_overrun()));
+    connect(this, SIGNAL(sign_stage_change(int)), &progress_bar, SLOT(setValue(int)));
 }
 
 void CreateDialog::slot_plus(){
@@ -87,6 +96,12 @@ void CreateDialog::remove_last_try()
     file.remove();
 }
 
+void CreateDialog::closeEvent(QCloseEvent *event)
+{
+    Q_UNUSED(event);
+    this->reject();
+}
+
 void CreateDialog::slot_create_form()
 {
     cur_num = 0;
@@ -94,17 +109,39 @@ void CreateDialog::slot_create_form()
     body_html.clear();
     flag_overrun = false;
     remove_last_try();
+    stage = 0;
+    //    emit sign_stage_change(qCeil(((double)100 / (double)3) * (double)stage));
+    progress_bar.setRange(0, 100);
+    ui->verticalLayout->addWidget(&progress_bar);
     emit sign_task_processing_completed();
 }
 
 void CreateDialog::slot_waiting_overrun()
 {
     flag_overrun = true;
-    QMessageBox::warning(this, tr("Ошибка"),
-                                           tr("Не удалось загрузить задания.\nПопробуйте использовать локальную базу данных."));
-//    ui->label_status->setText("Не удалось загрузить задания.\nПопробуйте использовать локальную базу данных.");
+    QMessageBox m_box(QMessageBox::Warning, tr("Ошибка"), tr("Не удалось загрузить задания."));
+    m_box.setWindowFlags(Qt::SubWindow);
+    m_box.setInformativeText("Попробуйте использовать локальную базу данных.");
+    m_box.exec();
     timer_waiting.stop();
 }
+
+//void CreateDialog::slot_load_page()
+//{
+//    QString buf;
+//    temp_page.page()->runJavaScript("document.body.innerHTML", [&]
+//                                   (QVariant result) {
+//                                       buf = result.toString();
+//                                   });
+//    while(buf.isEmpty() && !flag_overrun){
+//        QApplication::processEvents();
+//    }
+//    QFile file(resource_path + "FullPage.html");
+//    QTextStream stream(&file);
+//    file.open(QIODevice::WriteOnly);
+//    stream << buf;
+//    file.close();
+//}
 
 void CreateDialog::slot_task_processing()
 {
@@ -112,12 +149,17 @@ void CreateDialog::slot_task_processing()
     int value;
     spin_box = qobject_cast<QSpinBox*>(layout_list[cur_num]->itemAt(3)->widget());
     value = spin_box->value();
+    emit sign_stage_change(qCeil((100.0 / 6.0) * (double)(++stage)));
     if(value != 0){
         count_quest = value;
         if(ui->check_box_lockal_base->isChecked()){
             web_page.load(QUrl::fromLocalFile(resource_path + "test" + QString::number(cur_num) + ".html"));
         } else{
-            //            web_page.load(QUrl(list_url[cur_num]));
+            QMessageBox m_box(QMessageBox::Warning, tr("Предупреждение"), tr("Данная функция пока не реализована."));
+            m_box.setWindowFlags(Qt::SubWindow);
+            m_box.setInformativeText("Попробуйте использовать локальную базу данных.");
+            m_box.exec();
+//            temp_page.load(QUrl(list_url[cur_num]));
         }
         timer_waiting.start(8000);
     }else{

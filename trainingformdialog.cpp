@@ -35,14 +35,11 @@ void TrainingFormDialog::save_progress(QString field_type, QString file_name)
     QString temp_str = "~~";
     QFile file(resource_path + file_name);
     QTextStream stream(&file);
-//    qDebug() << file_name;
     web_view.page()->runJavaScript(set_JS_data(read_file("SaveProgTasks.js"), "field_type", field_type), [&]
                                    (QVariant result) {
                                        temp_str = result.toString();
-//                                       qDebug() << temp_str;
                                    });
     while(temp_str == "~~"){
-//        qDebug() << temp_str;
         QApplication::processEvents();
     }
     if(temp_str != "-1"){
@@ -116,8 +113,9 @@ void TrainingFormDialog::slot_end_try()
         } else if(buf == "multianswer"){
             result = check_task_answer("CheckMultiAnswerSolution.js", i);
         } else{
-            QMessageBox::warning(this, tr("Ошибка"),
-                                           tr("Не получается определить тип задания."));
+            QMessageBox m_box(QMessageBox::Warning, tr("Ошибка"), tr("Не получается определить тип задания."));
+            m_box.setWindowFlags(Qt::SubWindow);
+            m_box.exec();
         }
         buf.clear();
         show_results(result, i);
