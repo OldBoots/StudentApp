@@ -14,6 +14,7 @@ FormDialog::FormDialog(QWidget *parent) :
     connect(&web_view, SIGNAL(loadFinished(bool)), SLOT(slot_finished_form_load()));
     connect(ui->butt_end_try, SIGNAL(clicked(bool)), SLOT(slot_end_try()));
     connect(ui->butt_close, SIGNAL(clicked(bool)), SLOT(slot_close()));
+    connect(ui->listView, SIGNAL(clicked(QModelIndex)), SLOT(slot_scroll_to_task(QModelIndex)));
 }
 
 void FormDialog::load_form()
@@ -25,6 +26,7 @@ void FormDialog::save_progress()
 {
     QString prog_data;
     prog_data = run_JS_str_gd(web_view, "save_progress()").toString();
+    qDebug() << prog_data;
     QFile file(form_src + "ProgFile");
     QTextStream stream(&file);
     file.open(QIODevice::WriteOnly);
@@ -66,10 +68,16 @@ void FormDialog::load_progress()
     }
 }
 
+void FormDialog::slot_scroll_to_task(QModelIndex index)
+{
+    QStringList temp_list = model.data(index).toString().split(" ");
+    run_JS_str_wr(web_view, "document.getElementById(\"task_number_id_" + temp_list[temp_list.size() - 1] + "\").scrollIntoView();", false);
+}
+
 void FormDialog::slot_finished_form_load()
 {
     if(QFileInfo::exists(form_src + "ProgFile")){
-//        load_progress();
+        load_progress();
     }
     show_task_list();
 }
@@ -79,33 +87,38 @@ void FormDialog::slot_end_try()
     int type_task;
     for(int i = 0; i < list_task_num.size(); i++){
         type_task = run_JS_str_gd(web_view, "get_type(\"" + QString::number(i) + "\")").toInt();
-        qDebug() << "Number" << i + 1 << "type =" << run_JS_str_gd(web_view, "get_type(\"" + QString::number(i) + "\")").toString();
+        qDebug() << "num" << i + 1 << "type =" << run_JS_str_gd(web_view, "get_type(\"" + QString::number(i) + "\")").toString();
         switch (type_task) {
         case 1:
-            qDebug() << run_JS_str_gd(web_view, "check_string_num_task(\"" + QString::number(i) + "\")").toString();
+            result << run_JS_str_gd(web_view, "check_string_num_task(\"" + QString::number(i) + "\")").toInt();
             break;
         case 2:
-            qDebug() << run_JS_str_gd(web_view, "check_string_num_task(\"" + QString::number(i) + "\")").toString();
+            result << run_JS_str_gd(web_view, "check_string_num_task(\"" + QString::number(i) + "\")").toInt();
             break;
         case 3:
-            qDebug() << run_JS_str_gd(web_view, "check_comp_task(\"" + QString::number(i) + "\")").toString();
+            result << run_JS_str_gd(web_view, "check_comp_task(\"" + QString::number(i) + "\")").toInt();
             break;
         case 4:
-            qDebug() << run_JS_str_gd(web_view, "check_string_num_task(\"" + QString::number(i) + "\")").toString();
+            result << run_JS_str_gd(web_view, "check_string_num_task(\"" + QString::number(i) + "\")").toInt();
             break;
         case 5:
-            qDebug() << run_JS_str_gd(web_view, "check_table_string_task(\"" + QString::number(i) + "\")").toString();
+            result << run_JS_str_gd(web_view, "check_table_string_task(\"" + QString::number(i) + "\")").toInt();
             break;
         case 6:
-            qDebug() << run_JS_str_gd(web_view, "check_multi_task(\"" + QString::number(i) + "\")").toString();
+            result << run_JS_str_gd(web_view, "check_multi_task(\"" + QString::number(i) + "\")").toInt();
             break;
         case 7:
-            qDebug() << run_JS_str_gd(web_view, "check_28line_task(\"" + QString::number(i) + "\")").toString();
+            result << run_JS_str_gd(web_view, "check_28line_task(\"" + QString::number(i) + "\")").toInt();
             break;
         default:
             break;
         }
     }
+    flag_end_try = true;
+    show_result();
+    ui->butt_end_try->setEnabled(false);
+    run_JS_str_wr(web_view, "disable_form()", false);
+    run_JS_str_wr(web_view, "show_solution()", false);
 }
 
 void FormDialog::closeEvent (QCloseEvent *event)
@@ -149,6 +162,28 @@ void FormDialog::show_task_list()
                                                 model.appendRow(new QStandardItem(list_task_num[i]));
     }
     ui->listView->setModel(&model);
+}
+
+void FormDialog::show_result(){
+    int temp_result;
+    qDebug() << result;
+    for(int i = 0; i < result.size(); i++){
+        QModelIndex index_model_data;
+        QColor result_color;
+        temp_result = result[i];
+        index_model_data = model.index(i, 0);
+        if(temp_result == 0 && temp_result <= 25){
+            result_color.setRgb(255, 0, 0);
+        }else if(temp_result > 25 && temp_result <= 50){
+            result_color.setRgb(250, 115, 0);
+        }else if(temp_result > 50 && temp_result <= 70){
+            result_color.setRgb(154, 205, 50);
+        }else if(temp_result > 70 && temp_result <= 100){
+            result_color.setRgb(100, 255, 50);
+        }
+        model.setData(index_model_data, QString::number(temp_result) + "% " + list_task_num[i]);
+        model.setData(index_model_data, QBrush(result_color), Qt::ForegroundRole);
+    }
 }
 
 bool FormDialog::run_JS_str_wr(QWebEngineView &web, QString js_str, int w_flg)

@@ -15,5 +15,6 @@
         <file>SrcForm/SaveProgress.js</file>
         <file>SrcForm/LoadProgress.js</file>
         <file>SrcForm/BlankFormTemplate.html</file>
+        <file>SrcForm/EndTry.js</file>
     </qresource>
 </RCC>

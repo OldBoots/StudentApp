@@ -21,10 +21,12 @@ public:
     ~FormDialog();
 private slots:
     void slot_finished_form_load();
+    void slot_scroll_to_task(QModelIndex);
     void slot_end_try();
     void slot_close();
 private:
     void show_task_list();
+    void show_result();
     void load_form();
     void save_progress();
     void load_progress();
@@ -41,6 +43,7 @@ private:
     QWebEngineView web_view;
     QStringList list_task_num;
     QStandardItemModel model;
+    QList <int> result;
     bool flag_end_try;
 };
 

@@ -14,7 +14,7 @@ function init_main_div(id_task, num_task){
     main_div.className = "maindiv";
     let task_number = document.createElement("span");
     task_number.innerHTML = "<b>№ " + num_task + "</b>";
-    task_number.id = "task_number_id_" + id_task;
+    task_number.id = "task_number_id_" + num_task;
     main_div.appendChild(task_number);
     let answer_div = document.createElement("div");
     answer_div.id = "answer_" + id_task;

@@ -15,7 +15,7 @@ function save_progress() {
         if(textarea_arr[j].value.length === 0){
             result_str += "t=empty";
         }else{
-            textarea_arr += "t=" + textarea_arr[j].value;
+            result_str += "t=" + textarea_arr[j].value;
         }
         result_str += "~";
     }
