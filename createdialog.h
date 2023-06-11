@@ -40,10 +40,10 @@ signals:
 private:
     QString read_file(QString path);
     QString set_JS_data(QString file_path, QString value_name, QString value);
-    void load_url();
     void replace_value_in_str(QString &str, QString value_name, QString value);
     void remove_last_try();
     void closeEvent (QCloseEvent *event) override;
+//    void load_url();
 private:
     Ui::CreateDialog *ui;
     QWebEngineView web_page;

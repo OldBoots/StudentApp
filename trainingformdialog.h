@@ -1,6 +1,7 @@
 #ifndef TRAININGFORMDIALOG_H
 #define TRAININGFORMDIALOG_H
 
+#include "closedialog.h"
 #include <QDialog>
 #include <QWebEngineView>
 #include <QUrl>
@@ -14,7 +15,6 @@
 #include <QStandardItemModel>
 #include <QFileInfo>
 #include <QCloseEvent>
-#include "closedialog.h"
 
 namespace Ui {
 class TrainingFormDialog;

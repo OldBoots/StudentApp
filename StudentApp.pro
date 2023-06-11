@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     closedialog.cpp \
     createdialog.cpp \
+    formdialog.cpp \
+    loadformdialog.cpp \
     main.cpp \
     dialog.cpp \
     trainingformdialog.cpp
@@ -19,12 +21,16 @@ HEADERS += \
     closedialog.h \
     createdialog.h \
     dialog.h \
+    formdialog.h \
+    loadformdialog.h \
     trainingformdialog.h
 
 FORMS += \
     closedialog.ui \
     createdialog.ui \
     dialog.ui \
+    formdialog.ui \
+    loadformdialog.ui \
     trainingformdialog.ui
 
 # Default rules for deployment.

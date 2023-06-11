@@ -1,0 +1,74 @@
+div.pbody{
+    margin-bottom: 20px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    background-color: rgba(48, 213, 200, 0.2);
+}
+
+div.maindiv{
+}
+
+div.answer{
+    display: none;
+}
+
+div.answer_iRNA{
+    display: none;
+}
+
+div.type{
+    display: none;
+}
+
+div.solution{
+    display: none;
+}
+
+body{
+background-color: rgba(237, 237, 237, 1);
+}
+
+table, th, td{
+    border: 1px solid black;
+    text-align:center;
+    border-collapse: collapse;
+}
+
+img{
+    width: calc(60vw);
+    height: auto;
+}
+
+textarea.field{
+    background: transparent;
+    border: none;
+    text-align: center;
+}
+
+textarea.area{
+}
+
+input.string{
+}
+
+input.number_field {
+    -moz-appearance: textfield;
+}
+
+input.checkbox_field {
+}
+
+.number_field::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.table_number_field{
+    -moz-appearance: textfield;
+    background: transparent;
+    border: none;
+    width: calc(10vw);
+}
+
+.table_number_field::-webkit-inner-spin-button {
+  display: none;
+}

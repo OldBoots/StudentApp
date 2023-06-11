@@ -8,7 +8,7 @@ TrainingFormDialog::TrainingFormDialog(QWidget *parent) :
     ui->setupUi(this);
     ui->scrollArea->setFixedSize(200, 300);
     ui->horizontalLayout->addWidget(&web_view);
-    resource_path = "C:/Qt/project/StudentApp/";
+    resource_path = "C:/Qt/project/StudentApp/SrcTrainingForm/";
     ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     flag_end_try = false;
     open_form();

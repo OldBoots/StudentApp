@@ -4,8 +4,11 @@
 
 #include "createdialog.h"
 #include "trainingformdialog.h"
+#include "loadformdialog.h"
+#include "formdialog.h"
 #include <QMessageBox>
 #include <QDialog>
+#include <QFileDialog>
 #include <QFile>
 
 
@@ -25,6 +28,7 @@ public:
 private slots:
     void slot_create();
     void slot_open();
+    void slot_continue_training();
     void slot_continue();
 signals:
     void sign_show_training_form();
@@ -32,7 +36,8 @@ private:
     QString load_style(QString path);
 private:
     Ui::Dialog *ui;
-    QString resource_path;
+    QString training_form_src;
+    QString form_src;
 };
 
 #endif // DIALOG_H

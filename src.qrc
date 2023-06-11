@@ -6,8 +6,14 @@
         <file>plus.png</file>
         <file>minus.png</file>
         <file>Url.txt</file>
-        <file>MyStyle.css</file>
         <file>Warning.ico</file>
         <file>Warning.png</file>
+        <file>SrcTrainingForm/MyStyle.css</file>
+        <file>SrcForm/FormStyle.css</file>
+        <file>SrcForm/AddScript.js</file>
+        <file>SrcForm/CheckTask.js</file>
+        <file>SrcForm/SaveProgress.js</file>
+        <file>SrcForm/LoadProgress.js</file>
+        <file>SrcForm/BlankFormTemplate.html</file>
     </qresource>
 </RCC>

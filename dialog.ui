@@ -37,7 +37,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="butt_continue">
+       <widget class="QPushButton" name="butt_continue_training">
         <property name="text">
          <string>Продолжить попытку</string>
         </property>
@@ -75,6 +75,13 @@ background-color: #d4d4d4;</string>
        <widget class="QPushButton" name="butt_open">
         <property name="text">
          <string>Открыть бланк</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="butt_continue">
+        <property name="text">
+         <string>Продолжить попытку</string>
         </property>
        </widget>
       </item>

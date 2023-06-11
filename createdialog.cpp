@@ -10,7 +10,7 @@ CreateDialog::CreateDialog(QWidget *parent) :
     layout_list = ui->verticalLayout->findChildren<QHBoxLayout*>();
     QPushButton *butt;
     QSpinBox *spin_box;
-    resource_path = "C:/Qt/project/StudentApp/";
+    resource_path = "C:/Qt/project/StudentApp/SrcTrainingForm/";
     // Проходимся по всем дочерним элементам из списка layout
     for(int i = 0; i < layout_list.size(); ++i){
         if(layout_list[i]->objectName().left(7) == "hlayout"){
@@ -110,7 +110,6 @@ void CreateDialog::slot_create_form()
     flag_overrun = false;
     remove_last_try();
     stage = 0;
-    //    emit sign_stage_change(qCeil(((double)100 / (double)3) * (double)stage));
     progress_bar.setRange(0, 100);
     ui->verticalLayout->addWidget(&progress_bar);
     emit sign_task_processing_completed();
@@ -211,7 +210,8 @@ void CreateDialog::slot_show_web_page()
     QTextStream stream(&file);
     file.open(QIODevice::WriteOnly);
     stream << "<html>"
-           << "<body>" << "<link rel=\"stylesheet\" href=\"qrc:/MyStyle.css\">" << body_html << "</body>"
+//           << "<body>" << "<link rel=\"stylesheet\" href=\"qrc:/SrcTrainingForm/MyStyle.css\">" << body_html << "</body>"
+           << "<body>" << "<link rel=\"stylesheet\" href=\""+ resource_path +"/MyStyle.css\">" << body_html << "</body>"
            << "</html>";
     file.close();
     accept();
@@ -234,15 +234,15 @@ QString CreateDialog::read_file(QString path)
     return str;
 }
 
-void CreateDialog::load_url()
-{
-    QString str_url;
-    QFile file(":/Url.txt");
-    file.open(QIODevice::ReadOnly);
-    str_url = file.readAll();
-    list_url = str_url.split("\r\n");
-    file.close();
-}
+//void CreateDialog::load_url()
+//{
+//    QString str_url;
+//    QFile file(":/Url.txt");
+//    file.open(QIODevice::ReadOnly);
+//    str_url = file.readAll();
+//    list_url = str_url.split("\r\n");
+//    file.close();
+//}
 
 void CreateDialog::replace_value_in_str(QString &str, QString value_name, QString value){
     int index;
