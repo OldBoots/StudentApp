@@ -6,11 +6,10 @@ LoadFormDialog::LoadFormDialog(QString json, QString src, QWidget *parent) :
     ui(new Ui::LoadFormDialog)
 {
     ui->setupUi(this);
-    this->setWindowFlags(Qt::SubWindow);
+    this->setWindowFlag(Qt::Drawer);
     path_src_form = src;
     path_json = json;
     load_stage = 0;
-    ui->verticalLayout->addWidget(&temp_form);
     creat_form();
     connect(&temp_form, SIGNAL(loadFinished(bool)), SLOT(slot_add_tasks()));
     connect(ui->butt_cancel, SIGNAL(clicked(bool)), SLOT(slot_close()));

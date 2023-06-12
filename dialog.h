@@ -7,6 +7,7 @@
 #include "loadformdialog.h"
 #include "formdialog.h"
 #include <QMessageBox>
+#include <QMdiSubWindow>
 #include <QDialog>
 #include <QFileDialog>
 #include <QFile>

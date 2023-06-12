@@ -16,5 +16,7 @@
         <file>SrcForm/LoadProgress.js</file>
         <file>SrcForm/BlankFormTemplate.html</file>
         <file>SrcForm/EndTry.js</file>
+        <file>DocumentEdit_40924.ico</file>
+        <file>DocumentEdit_40924.png</file>
     </qresource>
 </RCC>

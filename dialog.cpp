@@ -10,8 +10,9 @@ Dialog::Dialog(QWidget *parent)
     // Редактируем внешний вид главной окна
     // Удаляем поля у окна
     setWindowFlags(Qt::FramelessWindowHint);
-    // Скругляем углы и задаем цвет
+    // Делаем окно фон окна прозрачным
     setAttribute(Qt::WA_TranslucentBackground);
+    // Задаем фон окна и скругляем углы
     setStyleSheet("background:transparent;");
     // Применяем CSS стили для оформления окна
     ui->frame->setStyleSheet(load_style(":/StyleWindow.css"));
@@ -58,7 +59,7 @@ void Dialog::slot_continue_training() // Слот продолжения реш�
         training_form.exec();
     }else{
         // Иначе выводим предупреждение
-        QMessageBox m_box(QMessageBox::Warning, tr("Предупреждение"), tr("Тренировочный бланк отсутствует."));
+        QMessageBox m_box(QMessageBox::NoIcon, tr("Предупреждение"), tr("Тренировочный бланк отсутствует."));
         m_box.setWindowFlags(Qt::SubWindow);
         m_box.setInformativeText("Создайте новый тренировойчный бланк.");
         m_box.exec();
@@ -76,9 +77,6 @@ void Dialog::slot_open()
             file.remove();
             FormDialog form;
             form.exec();
-        }else{
-//            QFile file(form_src + "Form.html");
-//            file.remove();
         }
     }
 }
@@ -91,7 +89,7 @@ void Dialog::slot_continue()
         form.exec();
     }else{
         // Иначе выводим предупреждение
-        QMessageBox m_box(QMessageBox::Warning, tr("Предупреждение"), tr("Бланк отсутствует."));
+        QMessageBox m_box(QMessageBox::NoIcon, tr("Предупреждение"), tr("Бланк отсутствует."));
         m_box.setWindowFlags(Qt::SubWindow);
         m_box.setInformativeText("Загрузите бланк.");
         m_box.exec();

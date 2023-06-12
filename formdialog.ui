@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Блан</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="src.qrc">
+    <normaloff>:/DocumentEdit_40924.ico</normaloff>:/DocumentEdit_40924.ico</iconset>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
@@ -69,6 +73,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="src.qrc"/>
+ </resources>
  <connections/>
 </ui>

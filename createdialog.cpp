@@ -6,6 +6,7 @@ CreateDialog::CreateDialog(QWidget *parent) :
     ui(new Ui::CreateDialog)
 {
     ui->setupUi(this);
+    this->setWindowFlag(Qt::Drawer);
     // Получчаем список дочерних layout из окна
     layout_list = ui->verticalLayout->findChildren<QHBoxLayout*>();
     QPushButton *butt;
@@ -210,7 +211,6 @@ void CreateDialog::slot_show_web_page()
     QTextStream stream(&file);
     file.open(QIODevice::WriteOnly);
     stream << "<html>"
-//           << "<body>" << "<link rel=\"stylesheet\" href=\"qrc:/SrcTrainingForm/MyStyle.css\">" << body_html << "</body>"
            << "<body>" << "<link rel=\"stylesheet\" href=\""+ resource_path +"/MyStyle.css\">" << body_html << "</body>"
            << "</html>";
     file.close();

@@ -7,7 +7,7 @@ CloseDialog::CloseDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     flag_end_try = false;
-    this->setWindowFlags(Qt::Tool);
+    this->setWindowFlag(Qt::Drawer);
     this->setWindowTitle("Предупреждение");
     connect(ui->butt_close, SIGNAL(clicked(bool)), SLOT(accept()));
     connect(ui->butt_cancel, SIGNAL(clicked(bool)), SLOT(reject()));

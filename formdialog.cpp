@@ -6,9 +6,11 @@ FormDialog::FormDialog(QWidget *parent) :
     ui(new Ui::FormDialog)
 {
     ui->setupUi(this);
+    this->setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     form_src = "C:/Qt/project/StudentApp/SrcForm/";
     ui->scrollArea->setFixedSize(200, 300);
     ui->horizontalLayout->addWidget(&web_view);
+    ui->listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     flag_end_try = false;
     load_form();
     connect(&web_view, SIGNAL(loadFinished(bool)), SLOT(slot_finished_form_load()));
@@ -110,9 +112,8 @@ void FormDialog::slot_end_try()
         case 7:
             result << run_JS_str_gd(web_view, "check_28line_task(\"" + QString::number(i) + "\")").toInt();
             break;
-        default:
-            break;
         }
+        qDebug() << result[i];
     }
     flag_end_try = true;
     show_result();
@@ -166,7 +167,6 @@ void FormDialog::show_task_list()
 
 void FormDialog::show_result(){
     int temp_result;
-    qDebug() << result;
     for(int i = 0; i < result.size(); i++){
         QModelIndex index_model_data;
         QColor result_color;

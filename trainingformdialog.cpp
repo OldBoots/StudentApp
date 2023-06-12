@@ -6,6 +6,7 @@ TrainingFormDialog::TrainingFormDialog(QWidget *parent) :
     ui(new Ui::TrainingFormDialog)
 {
     ui->setupUi(this);
+    this->setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     ui->scrollArea->setFixedSize(200, 300);
     ui->horizontalLayout->addWidget(&web_view);
     resource_path = "C:/Qt/project/StudentApp/SrcTrainingForm/";
@@ -16,7 +17,6 @@ TrainingFormDialog::TrainingFormDialog(QWidget *parent) :
     connect(ui->butt_end_try, SIGNAL(clicked(bool)), SLOT(slot_end_try()));
     connect(ui->listView, SIGNAL(clicked(QModelIndex)), SLOT(slot_go_to_task(QModelIndex)));
     connect(ui->butt_close, SIGNAL(clicked(bool)), SLOT(slot_close()));
-    this->setWindowFlags(Qt::Window);
 }
 
 void TrainingFormDialog::closeEvent (QCloseEvent *event)
